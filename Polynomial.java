@@ -19,24 +19,35 @@ public class Polynomial {
         return res;
     }
 
-    public Polynomial integrate(){
-        double newCoefficient[] = new double[coefficients.length-1];
+    public Polynomial differentiate(){
+        double[] newCoefficient = new double[coefficients.length-1];
         for (int i = coefficients.length-1; i > 1 ; i--) {
             newCoefficient[i-1] = i*coefficients[i];
         }
         return new Polynomial(newCoefficient, name + "'");
     }
 
+    public Polynomial integrate(double c){
+        double[] newCoefficient = new double[coefficients.length+1];
+        for (int i = 0; i < coefficients.length ; i++) {
+            newCoefficient[i] = coefficients[i]/(degree()+1-i);
+        }
+        newCoefficient[coefficients.length] = c;
+        return new Polynomial(newCoefficient, "IntegOf:" + name);
+    }
+
     @Override
     public String toString() {
         StringBuilder builder = new StringBuilder(name + "(x) = ");
         for (int i = 0; i < coefficients.length-1; i++) {
-            builder.append(coefficients[i]);
-            builder.append("*x^");
-            builder.append(coefficients.length - 1 - i);
-            builder.append(" + ");
+            if(coefficients[i] != 0){
+                builder.append(coefficients[i]);
+                builder.append("*x^");
+                builder.append(coefficients.length - 1 - i);
+                builder.append(" + ");
+            }
         }
-        builder.append(coefficients[0]);
+        builder.append(coefficients[coefficients.length-1]);
         return builder.toString();
     }
     public int degree(){
